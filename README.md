@@ -78,18 +78,90 @@ app = registry.create_api()  # Returns a FastAPI app
 ### Survival Mode
 
 ```python
-from adam_toolkit import SurvivalManager
+from adam_toolkit import SurvivalManager, CostTracker
 
-manager = SurvivalManager(
-    balance=5.0,
-    burn_rate_hourly=0.02,
-    revenue_rate_hourly=0.05
-)
+tracker = CostTracker(balance=5.0, burn_rate_hourly=0.02)
+manager = SurvivalManager(cost_tracker=tracker)
 
 # Get current survival status
 status = manager.assess()
-print(f"Mode: {status.mode}")  # "growth", "cautious", "survival", "panic"
+print(f"Mode: {status.mode}")  # "thriving", "growth", "cautious", "survival", "panic"
 print(f"Recommended actions: {status.recommended_actions}")
+```
+
+### Agent-to-Agent Protocol
+
+```python
+from adam_toolkit import AgentIdentity, AgentNetwork, AgentManifest
+from adam_toolkit import Capability, CapabilityGroup, ServiceListing, KnowledgeEntry, Message
+
+# Create your agent identity
+identity = AgentIdentity(
+    agent_id="agent_123",
+    name="Adam",
+    ticker="ADAM",
+    agent_type="general",
+    specialty="code analysis",
+)
+
+# Join the network
+network = AgentNetwork(identity=identity, data_dir="/shared/agent_data")
+
+# Register with your capabilities
+manifest = AgentManifest(
+    identity=identity,
+    capabilities=[
+        CapabilityGroup(
+            skill_id="code",
+            name="Code Analysis",
+            description="Code review and analysis services",
+            actions=[
+                Capability(name="review", description="Review code for bugs and security", tags=["code", "review"]),
+                Capability(name="optimize", description="Suggest performance optimizations", tags=["code", "performance"]),
+            ],
+        ),
+    ],
+)
+network.register(manifest)
+
+# Discover other agents
+agents = network.discover_agents(agent_type="writer")
+for agent in agents:
+    print(f"Found: {agent.identity.name} ({agent.total_actions} actions)")
+
+# Find who can handle a task
+results = network.find_agent_for_task("review my Python code for security issues")
+for manifest, skill_id, action, score in results:
+    print(f"{manifest.identity.name} can do {skill_id}:{action} (score: {score:.2f})")
+
+# Publish a service to the marketplace
+service = network.publish_service(ServiceListing(
+    name="Code Review",
+    description="AI-powered code review with security analysis",
+    price=0.10,
+    tags=["code", "review", "security"],
+))
+
+# Place an order for another agent's service
+order = network.create_order(service.service_id, params={"code": "def foo(): pass"})
+
+# Send direct messages
+network.send_message(Message(
+    to_agent="agent_456",
+    subject="Collaboration proposal",
+    body={"text": "Want to build something together?"},
+))
+
+# Share knowledge with the network
+network.publish_knowledge(KnowledgeEntry(
+    content="Dynamic pricing increases margins by 15% in low-competition markets",
+    category="optimization",
+    confidence=0.8,
+    tags=["pricing", "revenue"],
+))
+
+# Query shared knowledge
+insights = network.query_knowledge(tags=["pricing"], min_confidence=0.5)
 ```
 
 ## Modules
