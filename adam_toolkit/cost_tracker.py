@@ -163,7 +163,7 @@ class CostTracker:
     @property
     def runway_hours(self) -> float:
         """Estimated hours until balance reaches zero."""
-        burn = self.effective_burn_rate + self.base_burn_rate_hourly
+        burn = self.effective_burn_rate
         if burn <= 0:
             return float("inf")  # Profitable or no spending
         return self.balance / burn

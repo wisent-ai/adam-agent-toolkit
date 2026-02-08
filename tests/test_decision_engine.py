@@ -94,7 +94,7 @@ def test_auto_risk_tolerance():
     # Struggling agent
     tracker2 = CostTracker(balance=1.0, burn_rate_hourly=0.02)
     engine2 = DecisionEngine(tracker2)
-    assert engine2.risk_tolerance == RiskTolerance.MODERATE
+    assert engine2.risk_tolerance == RiskTolerance.CONSERVATIVE
 
     # Dying agent
     tracker3 = CostTracker(balance=0.1, burn_rate_hourly=0.1)

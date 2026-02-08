@@ -1,6 +1,7 @@
 """Tests for the cost tracker module."""
 
 import time
+from pytest import approx
 from adam_toolkit.cost_tracker import CostTracker
 
 
@@ -21,8 +22,8 @@ def test_revenue_tracking():
     tracker.record_revenue("code_review", 0.10)
     tracker.record_revenue("summarize", 0.05)
 
-    assert tracker.total_revenue == 0.15
-    assert tracker.balance == 50.15
+    assert tracker.total_revenue == approx(0.15)
+    assert tracker.balance == approx(50.15)
 
 
 def test_net_profit():
@@ -31,7 +32,7 @@ def test_net_profit():
     tracker.record_cost("api", 0.01)
     tracker.record_revenue("service", 0.10)
 
-    assert tracker.net_profit == 0.09
+    assert tracker.net_profit == approx(0.09)
 
 
 def test_runway_calculation():

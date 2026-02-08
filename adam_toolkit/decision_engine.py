@@ -127,7 +127,7 @@ class DecisionEngine:
 
         # Runway impact
         runway_impact = 0.0
-        burn = self.tracker.effective_burn_rate + self.tracker.base_burn_rate_hourly
+        burn = self.tracker.effective_burn_rate
         if burn > 0:
             runway_impact = -estimated_cost / burn  # Hours lost from cost
             if expected_revenue > 0:
